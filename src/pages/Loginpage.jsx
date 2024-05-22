@@ -1,4 +1,4 @@
-import { Header } from "../components";
+import { Header, Footer } from "../components";
 
 function Loginpage() {
   return (
@@ -7,6 +7,7 @@ function Loginpage() {
       <main id="main">
         <h1>Login Page</h1>
       </main>
+      <Footer />
     </>
   )
 }
