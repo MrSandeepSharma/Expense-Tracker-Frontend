@@ -5,7 +5,7 @@ function CardList({ items=[], onClick=()=> {} }) {
     const reverseData = [...items].reverse();
 
   return (
-    <ul className="flex flex-col gap-2 my-8">
+    <ul className="flex flex-col gap-2 my-8 w-full">
         {
             reverseData.map(item => (
                 <li 
