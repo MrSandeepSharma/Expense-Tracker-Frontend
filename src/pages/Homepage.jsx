@@ -69,10 +69,7 @@ function Homepage() {
       console.log(`Fetching expense data....`);
     } catch (error) {
       toast.error("Please check your Internet connection!")
-    } finally {
-      // setIsLoading(false);
-      console.log(4556)
-    }
+    } 
   }, []);
 
   useEffect(() => {
@@ -137,7 +134,9 @@ function Homepage() {
             />
             <PrimaryBtn className="py-3 sm:py-4 sm:text-xl" type="submit" text="Add Transaction" />
           </form>
-          <CardList items={expenses} onClick={deleteExpense} />
+          {
+            expenses && <CardList items={expenses} onClick={deleteExpense} />
+          }
         </div>
       </main>
       <Footer />
