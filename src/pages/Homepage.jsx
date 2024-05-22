@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
-import { Header, Footer, Loader } from "../components";
+import { Header, Footer, Loader, Input, Toastmsg } from "../components";
+import { PrimaryBtn } from "../components/Button";
 import { auth } from "../auth"
+import { database } from "../database"
 import { logout } from "../store/authSlice" 
 
 function Homepage() {
 
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
 
@@ -19,6 +24,27 @@ function Homepage() {
     }
   }
 
+  async function addNewExpense(data) {
+    const name = data.name;
+    const type = data.type;
+    const amount = data.amount;
+
+    setLoading(true)
+    try {
+      const newExpense = await database.addExpenses(name, amount, type)
+
+      if(typeof newExpense != "object") {
+        toast.error("Please check your Internet connection!")
+        setLoading(false)
+        return;
+      }
+      setLoading(false)
+      reset()
+    } catch (error) {
+      toast.error("Please check your Internet connection!")
+    }
+  }
+
   return (
     <>
       <Header btnType="button" btnText="Logout" onClick={logoutCurrentUser} />
@@ -26,7 +52,36 @@ function Homepage() {
         {
           loading && <Loader />
         }
-        <h1>Home Page</h1>
+        <Toastmsg />
+        <form 
+          className="flex flex-col gap-5 sm:gap-7"
+          onSubmit={handleSubmit(addNewExpense)}
+        >
+          <Input 
+            type="text" 
+            name="name" 
+            placeholder="Salary, House Rent, SIP" 
+            register={register('name', { required: 'name is required' })}
+            errTxt={errors.name?.message}
+          />
+          <select
+            name="type"
+            className="w-full p-2 outline-0 border-2 border-cyan-950 rounded text-cyan-950 text-lg"
+            {...register('type', { required: 'Transaction type is required' })}
+            aria-label="Transaction Type">
+            <option value="Investment">Investment</option>
+            <option value="Expense">Expenses</option>
+            <option value="Savings">Saving</option>
+          </select>
+          <Input 
+            type="number" 
+            name="amount" 
+            placeholder="Amount" 
+            register={register('amount', { required: 'amount is required' })}
+            errTxt={errors.amount?.message}
+          />
+          <PrimaryBtn className="py-3 sm:py-4 sm:text-xl" type="submit" text="Add Transaction" />
+        </form>
       </main>
       <Footer />
     </>
