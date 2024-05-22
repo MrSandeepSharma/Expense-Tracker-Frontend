@@ -17,7 +17,7 @@ function Landingpage() {
               categorize your expenses, manage your budget, and gain valuable insights 
               into your financial habits.
             </p>
-            <PrimaryBtn className="w-fit" text="Track Your Expenses" />
+            <PrimaryBtn to="/signup" className="w-fit" text="Track Your Expenses" />
           </div>
           <img className="m-8" src={heroImg} />
         </section>
