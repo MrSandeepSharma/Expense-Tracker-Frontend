@@ -2,14 +2,30 @@ import { useForm } from "react-hook-form";
 
 import { Header, Footer, Input } from "../components";
 import { PrimaryBtn } from "../components/Button";
+import { auth } from "../auth";
 
 function Loginpage() {
 
-  const {register, handleSubmit, formState: {errors}, reset} = useForm();
+  const {register, handleSubmit, formState: {errors}, setError, reset} = useForm();
 
-  function loginUser(data) {
-    console.log("User Data:", data)
-    reset()
+  async function loginUser(data) {
+    const email = data.email;
+    const password = data.password;
+
+    try {
+      const user = await auth.loginUser(email, password)
+      
+      if(typeof user != "object") {
+        setError('email', { type: 'manual', message: user });
+        setError('password', { type: 'manual', message: user });
+        return;
+      }
+
+      console.log(user)
+      reset()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
