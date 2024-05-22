@@ -77,3 +77,8 @@ textarea:not([rows]) {
 button {
   cursor: pointer;
 }
+
+/* body */
+body {
+  background-color: #F3F2F1;
+}
