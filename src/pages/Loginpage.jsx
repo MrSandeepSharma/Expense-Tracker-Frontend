@@ -1,30 +1,39 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
-import { Header, Footer, Input } from "../components";
+import { Header, Footer, Input, Toastmsg, Loader } from "../components";
 import { PrimaryBtn } from "../components/Button";
 import { auth } from "../auth";
 
 function Loginpage() {
 
   const {register, handleSubmit, formState: {errors}, setError, reset} = useForm();
+  const [Loading, setLoading] = useState(false)
 
   async function loginUser(data) {
     const email = data.email;
     const password = data.password;
 
+    setLoading(true)
     try {
       const user = await auth.loginUser(email, password)
-      
+
       if(typeof user != "object") {
         setError('email', { type: 'manual', message: user });
         setError('password', { type: 'manual', message: user });
+        toast.error(user)
+        setLoading(false)
         return;
       }
 
       console.log(user)
+      toast.success("User Logged In Successfully!")
       reset()
+      setLoading(false)
     } catch (error) {
-      console.log(error)
+      toast.error("Please check your Inputs again!")
+      setLoading(false)
     }
   }
 
@@ -32,6 +41,10 @@ function Loginpage() {
     <>
       <Header btnPath="/signup" btnText="Create New Account" />
       <main id="main" className="bg-zinc-100 py-4 px-6 sm:py-6 sm:px-8 md:py-8 md:px-16">
+        <Toastmsg />
+        {
+          Loading && <Loader />
+        }
         <section className="min-h-svh sm:max-w-2xl m-auto lg:min-h-fit lg:mb-28">
           <h1 className="text-5xl font-bold max-w-lg">Login</h1>
           <p className="my-6 max-w-lg">

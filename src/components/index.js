@@ -2,5 +2,7 @@ import Logo from "./Logo";
 import Header from "./Header"
 import Footer from "./Footer";
 import Input from "./Input";
+import Toastmsg from "./Toastmsg"
+import Loader from "./Loader"
 
-export { Logo, Header, Footer, Input };
+export { Logo, Header, Footer, Input, Toastmsg, Loader };
