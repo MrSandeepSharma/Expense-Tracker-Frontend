@@ -25,6 +25,7 @@ function App() {
           dispatch(login(newData))
           setLoading(false)
         }
+        setLoading(false)
       })
   },[])
 
