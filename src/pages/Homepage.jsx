@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import { Header, Footer, Loader, Input, Toastmsg } from "../components";
+import { Header, Footer, Loader, Input, Toastmsg, CardList } from "../components";
 import { PrimaryBtn } from "../components/Button";
 import { auth } from "../auth"
 import { database } from "../database"
@@ -42,6 +42,20 @@ function Homepage() {
       fetchData()
       setLoading(false)
       reset()
+    } catch (error) {
+      toast.error("Please check your Internet connection!")
+    }
+  }
+
+  async function deleteExpense(e) {
+    const expenseId = e.currentTarget.dataset.id;
+    setLoading(true)
+    try {
+      const res = await database.deleteExpense(expenseId)
+      if (res) {
+        fetchData()
+        setLoading(false)
+      }
     } catch (error) {
       toast.error("Please check your Internet connection!")
     }
@@ -102,11 +116,7 @@ function Homepage() {
           <PrimaryBtn className="py-3 sm:py-4 sm:text-xl" type="submit" text="Add Transaction" />
         </form>
         <div>
-          {
-            expenses.map(expense => (
-              <h1 key={expense._id}>{expense.name}, {expense.amount}, {expense.category}</h1>
-            ))
-          }
+          <CardList items={expenses} onClick={deleteExpense} />
         </div>
       </main>
       <Footer />
