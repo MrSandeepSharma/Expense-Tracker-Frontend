@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -13,6 +13,7 @@ function Homepage() {
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [loading, setLoading] = useState(false)
+  const [expenses, setExpenses] = useState([])
   const dispatch = useDispatch()
 
   async function logoutCurrentUser() {
@@ -38,6 +39,7 @@ function Homepage() {
         setLoading(false)
         return;
       }
+      fetchData()
       setLoading(false)
       reset()
     } catch (error) {
@@ -45,6 +47,23 @@ function Homepage() {
     }
   }
 
+  const fetchData = useCallback(async () => {
+    try {
+      const fetchedData = await database.getExpenses();
+      setExpenses(fetchedData)
+      console.log(`Fetching expense data....`);
+    } catch (error) {
+      toast.error("Please check your Internet connection!")
+    } finally {
+      // setIsLoading(false);
+      console.log(4556)
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData, setExpenses]);
+  
   return (
     <>
       <Header btnType="button" btnText="Logout" onClick={logoutCurrentUser} />
@@ -82,6 +101,13 @@ function Homepage() {
           />
           <PrimaryBtn className="py-3 sm:py-4 sm:text-xl" type="submit" text="Add Transaction" />
         </form>
+        <div>
+          {
+            expenses.map(expense => (
+              <h1 key={expense._id}>{expense.name}, {expense.amount}, {expense.category}</h1>
+            ))
+          }
+        </div>
       </main>
       <Footer />
     </>
