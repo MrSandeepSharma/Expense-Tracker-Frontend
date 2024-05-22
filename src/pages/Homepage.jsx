@@ -1,8 +1,13 @@
+import { Header } from "../components";
+
 function Homepage() {
   return (
-    <main id="main">
+    <>
+      <Header btnType="button" btnText="Logout" />
+      <main id="main">
         <h1>Home Page</h1>
-    </main>
+      </main>
+    </>
   )
 }
 

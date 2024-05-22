@@ -1,8 +1,13 @@
+import { Header } from "../components";
+
 function Landingpage() {
   return (
-    <main id="main">
+    <>
+      <Header btnPath="/signup" btnText="Get Started" />
+      <main id="main">
         <h1>Landing Page</h1>
-    </main>
+      </main>
+    </>
   )
 }
 
