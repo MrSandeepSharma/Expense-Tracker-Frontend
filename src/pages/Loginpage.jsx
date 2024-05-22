@@ -1,15 +1,20 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 
 import { Header, Footer, Input, Toastmsg, Loader } from "../components";
 import { PrimaryBtn } from "../components/Button";
 import { auth } from "../auth";
+import { login } from "../store/authSlice"
 
 function Loginpage() {
 
   const {register, handleSubmit, formState: {errors}, setError, reset} = useForm();
   const [Loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   async function loginUser(data) {
     const email = data.email;
@@ -27,7 +32,13 @@ function Loginpage() {
         return;
       }
 
-      console.log(user)
+      const userData = {
+        username: user.username,
+        email: user.email
+      }
+
+      dispatch(login(userData))
+      navigate("/")
       toast.success("User Logged In Successfully!")
       reset()
       setLoading(false)

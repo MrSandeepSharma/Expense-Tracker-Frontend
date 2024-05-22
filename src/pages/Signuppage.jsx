@@ -1,15 +1,20 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 
 import { Header, Footer, Input, Toastmsg, Loader } from "../components";
 import { PrimaryBtn } from "../components/Button";
 import { auth } from "../auth"
+import { login } from "../store/authSlice"
 
 function Signuppage() {
 
   const { register, handleSubmit, formState: { errors }, setError, reset } = useForm();
   const [Loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   async function createUser(data) {
     const email = data.email;
@@ -27,7 +32,13 @@ function Signuppage() {
         return;
       }
 
-      console.log(newUser)
+      const userData = {
+        username: newUser.username,
+        email: newUser.email
+      }
+
+      dispatch(login(userData))
+      navigate("/")
       toast.success("User Created Successfully!")
       reset()
       setLoading(false)
